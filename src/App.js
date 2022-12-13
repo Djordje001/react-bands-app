@@ -1,25 +1,47 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import BandsList from "./components/BandsList";
+import Navbar from "./components/Navbar";
+import StaticExampleModal from "./components/StaticExampleModal";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component{
+    state={
+        bands:[],
+        pokazi:false,
+        band:{},
+        
+    }
+    componentDidMount(){
+        fetch('https://raw.githubusercontent.com/Danilovesovic/bands/master/bands_with_id.json')
+        .then(res=>{
+            return res.json();
+        })
+        .then(data=>{
+            // console.log(data);
+            this.setState({bands:data});
+        })
+    }
+    pokazimodal=(band)=>{
+        // console.log(band);
+        this.setState({band:band});
+        this.setState({pokazi:true});
+    }
+    ugasimodal=()=>{
+        // console.log(band);
+        this.setState({band:{}});
+        this.setState({pokazi:false});
+    }
+    render(){
+        return(
+            <>
+            <Navbar/>
+            <BandsList bands={this.state.bands} pokazimodal={this.pokazimodal}/>
+            {/* <StaticExampleModal pokazi={this.state.pokazi}/> */}
+            <StaticExampleModal show={this.state.pokazi} band={this.state.band} ugasimodal={this.ugasimodal}/>
+            </>
+            
+        )
+    }
 }
+
 
 export default App;
